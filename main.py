@@ -54,7 +54,6 @@ def extract_clips(video_path: Path, moments: list, duration=10):
         print(f"[🎞] Extracted clip: {output_file}")
 
 if __name__ == "__main__":
-    print("main.py is running")
     video_url = input("Enter YouTube video URL: ").strip()
     get_video_id(video_url)
     from download import download_video

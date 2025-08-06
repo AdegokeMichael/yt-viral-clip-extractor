@@ -1,0 +1,7 @@
+yt-dlp
+transformers
+torch
+opencv-python
+librosa
+numpy
+python-dotenv
