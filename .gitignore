@@ -1,0 +1,43 @@
+# Byte-compiled / optimized / DLL files
+_pycache_/
+*.py[cod]
+*$py.class
+__pycache__/
+
+# Virtual environment
+venv/
+.env
+*.env
+env/
+.venv/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# VSCode settings
+.vscode/
+
+# macOS system files
+.DS_Store
+
+# Log files
+*.log
+
+# Python egg info
+*.egg-info/
+
+# Downloaded videos
+*.mp4
+*.mkv
+*.webm
+
+# Extracted clips and temporary folders
+clips/
+temp/
+output/
+
+# Bash scripts (optional, if generated)
+*.sh~
+
+#OS-generated files
+*.swp
