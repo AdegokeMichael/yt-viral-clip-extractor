@@ -5,3 +5,4 @@ opencv-python
 librosa
 numpy
 python-dotenv
+pillow
