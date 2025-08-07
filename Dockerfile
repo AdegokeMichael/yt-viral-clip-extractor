@@ -13,7 +13,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy project files
 COPY . .
 
-# Set environment variables (optional)
+# Set environment variables
 ENV DOWNLOAD_DIR=downloads
 ENV OUTPUT_DIR=clips
 
@@ -22,3 +22,4 @@ RUN mkdir -p downloads clips
 
 # Default command
 CMD ["python", "main.py"]
+
