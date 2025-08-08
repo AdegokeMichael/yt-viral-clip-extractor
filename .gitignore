@@ -1,8 +1,14 @@
-# Byte-compiled / optimized / DLL files
+# Byte-compiled / optimized / DLL files /distribution files
+# Python bytecode files
 _pycache_/
 *.py[cod]
 *$py.class
 __pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite3
 
 # Virtual environment
 venv/
@@ -35,9 +41,15 @@ env/
 clips/
 temp/
 output/
+downloads/
 
 # Bash scripts (optional, if generated)
 *.sh~
 
 #OS-generated files
 *.swp
+
+# Docker build artifacts
+*.tar
+*.img
+*.container
