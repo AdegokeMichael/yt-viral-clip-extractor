@@ -10,7 +10,7 @@ import subprocess
 model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
 processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
 
-def extract_frames(video_path, every_n_frames=30):
+def extract_frames(video_path, every_n_frames=120):
     cap = cv2.VideoCapture(str(video_path))
     frames = []
     timestamps = []
@@ -20,6 +20,8 @@ def extract_frames(video_path, every_n_frames=30):
     while success:
         if count % every_n_frames == 0:
             timestamp = count / fps
+            # Resize frame to 224x224 for CLIP
+            frame = cv2.resize(frame, (224, 224))
             frames.append(frame)
             timestamps.append(timestamp)
         success, frame = cap.read()
@@ -27,13 +29,17 @@ def extract_frames(video_path, every_n_frames=30):
     cap.release()
     return frames, timestamps
 
-def rank_frames(frames):
+def rank_frames(frames, batch_size=32):
     prompts = ["exciting", "emotional", "shocking", "funny", "surprising"]
-    inputs = processor(text=prompts, images=frames, return_tensors="pt", padding=True)
-    outputs = model(**inputs)
-    logits_per_image = outputs.logits_per_image
-    scores = logits_per_image.softmax(dim=1).max(dim=1).values
-    return scores.tolist()
+    scores = []
+    for i in range(0, len(frames), batch_size):
+        batch = frames[i:i+batch_size]
+        inputs = processor(text=prompts, images=batch, return_tensors="pt", padding=True)
+        outputs = model(**inputs)
+        logits_per_image = outputs.logits_per_image
+        batch_scores = logits_per_image.softmax(dim=1).max(dim=1).values
+        scores.extend(batch_scores.tolist())
+    return scores
 
 def find_viral_moments(video_path, top_n=3):
     frames, timestamps = extract_frames(video_path)
