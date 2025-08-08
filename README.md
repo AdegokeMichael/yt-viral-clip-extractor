@@ -21,7 +21,7 @@ Extracts viral moments from YouTube videos using OpenAI CLIP and saves them as s
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/yourusername/yt-viral-clip-extractor.git
+git clone https://github.com/AdegokeMichael/yt-viral-clip-extractor.git
 cd yt-viral-clip-extractor
 ```
 
