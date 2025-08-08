@@ -22,4 +22,3 @@ RUN mkdir -p downloads clips
 
 # Default command
 CMD ["python", "main.py"]
-
