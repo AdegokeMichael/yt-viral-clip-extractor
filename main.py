@@ -2,9 +2,11 @@ import cv2
 import torch
 import numpy as np
 from pathlib import Path
+from pydub import AudioSegment
 from tools import DOWNLOAD_DIR, OUTPUT_DIR, get_video_id, create_directories
 from transformers import CLIPProcessor, CLIPModel
 import subprocess
+
 
 # Load CLIP
 model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
@@ -47,6 +49,26 @@ def find_viral_moments(video_path, top_n=3):
     ranked = sorted(zip(timestamps, scores), key=lambda x: x[1], reverse=True)
     return [timestamp for timestamp, score in ranked[:top_n]]
 
+def extract_audio(video_path):
+    audio_path = DOWNLOAD_DIR / f"{video_path.stem}.wav"
+    subprocess.run([
+        "ffmpeg", "-y", "-i", str(video_path),
+        "-vn", "-acodec", "pcm_s16le", "-ar", "16000", "-ac", "1", str(audio_path)
+    ], check=True)
+    audio = AudioSegment.from_wav(str(audio_path))
+    return audio
+    if not audio_path.exists():
+        video = AudioSegment.from_file(video_path)
+        video.export(audio_path, format="wav")
+        print(f"[🎵] Extracted audio to: {audio_path}")
+        return audio
+def find_audio_moments(audio, segment_ms=10000, top_n=3):
+    segments = [audio[i:i+segment_ms] for i in range(0, len(audio), segment_ms)]
+    loudness = [seg.dBFS for seg in segments]
+    ranked = sorted(enumerate(loudness), key=lambda x: x[1], reverse=True)
+    moments = [(i * segment_ms) / 1000 for i, _ in ranked[:top_n]]
+    return moments    
+
 def extract_clips(video_path: Path, moments: list, duration=10):
     for i, timestamp in enumerate(moments):
         output_file = OUTPUT_DIR / f"{video_path.stem}clip{i+1}.mp4"
@@ -84,7 +106,11 @@ if __name__ == "__main__":
     if video_path:
         print(f"[🔍] Analyzing: {video_path}")
         moments = find_viral_moments(video_path)
-        extract_clips(video_path, moments)
+        audio = extract_audio(video_path)
+        audio_moments = find_audio_moments(audio)
+        print(f"Audio moments (seconds): {audio_moments}")
+        all_moments = sorted(set(moments + audio_moments))[:3]
+        extract_clips(video_path, all_moments)
     else:
         print("[❌] No downloaded video found.")
         print("DEBUG: DOWNLOAD_DIR =", DOWNLOAD_DIR)
