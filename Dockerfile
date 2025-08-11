@@ -17,8 +17,12 @@ COPY . .
 ENV DOWNLOAD_DIR=downloads
 ENV OUTPUT_DIR=clips
 
+EXPOSE 8000
+
 # Create necessary directories
-RUN mkdir -p downloads clips
+#RUN mkdir -p downloads clips
+#Default command
+# CMD ["python", "main.py"]
 
 # Default command
-CMD ["python", "main.py"]
+CMD ["uvicorn", "api:app", "--host", "0.0.0.0", "--port", "8000"]
