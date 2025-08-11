@@ -8,6 +8,7 @@ Extracts viral moments from YouTube videos using OpenAI CLIP and saves them as s
 - Analyzes video frames with CLIP to find exciting, emotional, shocking, funny, or surprising moments
 - Extracts top moments as short video clips using `ffmpeg`
 - Dockerized for easy setup and reproducibility
+- FastAPI endpoint for programmatic access
 
 ## Requirements
 
@@ -15,6 +16,14 @@ Extracts viral moments from YouTube videos using OpenAI CLIP and saves them as s
 - [ffmpeg](https://ffmpeg.org/)
 - [yt-dlp](https://github.com/yt-dlp/yt-dlp)
 - See `requirements.txt` for Python dependencies
+
+
+## API Usage
+
+Start the API server:
+```bash
+uvicorn api:app --host 0.0.0.0 --port 8000
+
 
 ## Usage
 
